@@ -20,7 +20,7 @@ services:
         target: /data
 
     ports:
-      - "8080:80"  # Main port
+      - "8080:8000"  # Main port
       - "5555:5555"  # Debug port
     networks:
       - stock-mkt-ntw
