@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "stock-mkt-app"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "stock_mkt"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+requests = "^2.32.1"
+responses = "^0.25.0"
+pydantic = "^2.7.1"
+uvicorn = "^0.29.0"
+web-pdb = "^1.6.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

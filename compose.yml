@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  stock-mkt.app:
+    build:
+      context: .
+    entrypoint: /app/scripts/init.api.sh
+    volumes:
+
+      - type: bind
+        source: ./stock_mkt
+        target: /app/stock_mkt/
+
+      - type: bind
+        source: ./tests
+        target: /app/tests/
+
+      - type: volume
+        source: stock-mkt-data
+        target: /data
+
+    ports:
+      - "8080:80"  # Main port
+      - "5555:5555"  # Debug port
+    networks:
+      - stock-mkt-ntw
+
+volumes:
+  stock-mkt-data:
+
+networks:
+  # The presence of these objects is sufficient to define them
+  stock-mkt-ntw: {}
