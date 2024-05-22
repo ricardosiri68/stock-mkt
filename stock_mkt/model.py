@@ -42,7 +42,7 @@ class StockRequest(BaseModel):
     apikey: str
 
 
-class StockResponse(BaseModel):
+class Stock(BaseModel):
     """The response from the backend stock api."""
 
     open: str
