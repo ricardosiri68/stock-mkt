@@ -2,8 +2,8 @@ import json
 
 import responses
 
-from stock_mkt.config import MONGO_DB_NAME, ALPHA_VANTAGE_URL
 from stock_mkt.cache import get_cache
+from stock_mkt.config import MONGO_DB_NAME, ALPHA_VANTAGE_URL
 from stock_mkt.db import get_db_client
 from stock_mkt.repositories import UserRepository
 

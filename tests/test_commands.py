@@ -2,12 +2,10 @@ from unittest import TestCase
 
 import pytest
 
-from stock_mkt.model import User
-from stock_mkt.db import get_db_client
-from stock_mkt.repositories import UserRepository
 from stock_mkt import commands
-from stock_mkt.config import MONGO_DB_NAME
 from stock_mkt.crypto_utils import hash_password, JwtManager
+from stock_mkt.model import User
+from stock_mkt.repositories import UserRepository
 from tests.utils import clear_users
 
 

@@ -1,18 +1,19 @@
-from unittest import TestCase
 from http import HTTPStatus
+from unittest import TestCase
 
 from fastapi.testclient import TestClient
 import responses
 
 from stock_mkt.app import app
-from stock_mkt.repositories import UserRepository
-from stock_mkt.db import get_db_client
-from stock_mkt.config import MONGO_DB_NAME, ALPHA_VANTAGE_URL
-from stock_mkt.crypto_utils import hash_password
-from stock_mkt.model import User
 from stock_mkt.cache import get_cache
 from stock_mkt.commands import login_user
+from stock_mkt.config import MONGO_DB_NAME, ALPHA_VANTAGE_URL
+from stock_mkt.crypto_utils import hash_password
+from stock_mkt.db import get_db_client
+from stock_mkt.model import User
+from stock_mkt.repositories import UserRepository
 from tests.utils import response_content, stub_response, clear_cache, clear_users
+
 
 client = TestClient(app)
 

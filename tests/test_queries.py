@@ -1,17 +1,14 @@
-import json
 from http import HTTPStatus
 from unittest import TestCase
 
-import responses
+from fastapi import HTTPException
 import pytest
-from fastapi import Request, HTTPException
+import responses
 
 from stock_mkt import queries
 from stock_mkt.cache import get_cache
-from stock_mkt.config import MONGO_DB_NAME
 from stock_mkt.commands import login_user
 from stock_mkt.crypto_utils import hash_password
-from stock_mkt.db import get_db_client
 from stock_mkt.model import Stock, User
 from stock_mkt.repositories import StockRepository, UserRepository
 from tests.utils import stub_response, clear_cache, clear_users
