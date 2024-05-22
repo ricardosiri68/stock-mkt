@@ -1,10 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request, Depends
-
+from http import HTTPStatus
 from typing import Dict
-import requests
 
-from stock_mkt.commands import save_users
-from stock_mkt.model import SignUpRequest
+import requests
+from fastapi import FastAPI, HTTPException, Request, Depends, Response
+
+from stock_mkt.commands import login_user, signup_user
+from stock_mkt.model import LogInRequest, SignUpRequest
 from stock_mkt.queries import get_current_user, get_stock
 
 
@@ -13,18 +14,15 @@ app = FastAPI()
 
 @app.post("/signup")
 async def signup(request: SignUpRequest):
-    users = {}
 
-    if not request.name or not request.last_name or not request.email:
-        raise HTTPException(status_code=400, detail="All fields are required")
+    signup_user(request)
+    return Response(status_code=HTTPStatus.NO_CONTENT)
 
-    api_key = f'api_key_{len(users) + 1}'
-    user = request.model_dump()
-    user.update({'api_key': api_key}) 
-    users[request.email] = user
-    save_users(users)
 
-    return {"api_key": api_key}
+@app.post("/login")
+async def login(request: LogInRequest):
+    api_key = login_user(request.email, request.password)
+    return Response(status_code=HTTPStatus.CREATED, {'api_key': api_key})
 
 
 @app.get("/stock/{symbol}")

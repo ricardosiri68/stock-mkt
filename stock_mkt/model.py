@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, UUID
 
 
 class SignUpRequest(BaseModel):
@@ -7,6 +7,30 @@ class SignUpRequest(BaseModel):
     name: str
     last_name: str
     email: EmailStr
+    password: str
+
+
+class LogInRequest(BaseModel):
+    """The request to add a new user to the system."""
+
+    email: str
+    password: str
+
+
+class User(BaseModel):
+    """The user stored on the database."""
+
+    name: str
+    last_name: str
+    email: EmailStr
+    password: str
+
+
+class Session(BaseModel):
+    """The active session of the user."""
+
+    id: UUID
+    user_email: str
 
 
 class StockRequest(BaseModel):

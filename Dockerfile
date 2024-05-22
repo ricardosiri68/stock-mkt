@@ -7,6 +7,7 @@ RUN pip install poetry && poetry install
 
 RUN mkdir /data /app/logs
 RUN touch /app/logs/api.log
+RUN touch /data/users.json
 COPY stock_mkt /app/stock_mkt
 COPY tests /app/tests
 COPY scripts /app/scripts

@@ -5,6 +5,8 @@ from fastapi import HTTPException, Depends
 from stock_mkt import config
 from stock_mkt.model import StockRequest, StockResponse
 from stock_mkt.logs import logging
+from stock_mkt.repositories import UserRepository, SessionRepository
+from stock_mkt.crypto_utils import JwtManager
 
 
 def get_stock(symbol: str):
@@ -35,20 +37,13 @@ def get_stock(symbol: str):
     return StockResponse(**data)
 
 
-def load_users():
-    try:
-        with open('/data/users.json', 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-
-users = load_users()
-
-
 def get_current_user(api_key: str = Depends(lambda request: request.headers.get('API_KEY'))):
-    for user in users.values():
-        if user["api_key"] == api_key:
-            return user
+    jwt_manager = JwtManager()()
+    session_repo = SessionRepository()
+    session_data = jwt_manager.decode(api_key)
 
-    raise HTTPException(status_code=401, detail="Unauthorized")
+    session = Session(session_data.get('session_id'), session_data.get('user_email'))
+    user_email = session_repo.get(session.id)
+
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Unauthorized")
