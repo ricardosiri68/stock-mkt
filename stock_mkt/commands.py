@@ -1,16 +1,14 @@
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 from stock_mkt.crypto_utils import JwtManager, hash_password
-from stock_mkt.model import SignUpRequest, User
+from stock_mkt.model import SignUpRequest, Session, User
 from stock_mkt.repositories import SessionRepository, UserRepository
 
 
 def signup_user(signup: SignUpRequest):
 
-    if not request.name or not request.last_name or not request.email:
+    if not signup.name or not signup.last_name or not signup.email:
         raise HTTPException(status_code=400, detail="All fields are required")
-
-    api_key = f'api_key_{len(users) + 1}'
 
     repo = UserRepository()
     user = repo.get_by_email(signup.email)

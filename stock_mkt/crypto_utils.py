@@ -20,5 +20,5 @@ class JwtManager:
     def encode(self, payload: dict) -> str:
         return jwt.encode(payload, self.__secret, self.ALGORITM)
 
-    def decode(self, jwt: str) -> dict:
-        return jwt.decode(jwt, self.__secret, algorithms=[self.ALGORITM])
+    def decode(self, encrypted_text: str) -> dict:
+        return jwt.decode(encrypted_text, self.__secret, algorithms=[self.ALGORITM])

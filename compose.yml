@@ -5,6 +5,8 @@ services:
     build:
       context: .
     entrypoint: /app/scripts/init.api.sh
+    env_file:
+      - .env
     volumes:
 
       - type: bind

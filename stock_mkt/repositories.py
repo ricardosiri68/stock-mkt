@@ -14,10 +14,11 @@ class UserRepository:
         self.__db_client = get_db_client()
     
     def get_by_email(self, email: str) -> Optional[User]:
-        return self.get_collection().find_one({'email': email})
+        user = self.get_collection().find_one({'email': email})
+        return User(**user)
 
     def save(self, user: User):
-        self.get_collection().replace_one({'email': user.email}, user.model_dump())
+        self.get_collection().replace_one({'email': user.email}, user.model_dump(), upsert=True)
     
     def get_collection(self):
         return self.__db_client.get_database(MONGO_DB_NAME).get_collection(self.COLLECTION_NAME)
@@ -35,7 +36,7 @@ class SessionRepository:
 
     def get(self, session_id: str) -> Session:
         user_email = self.__cache_client.get(session_id)
-        return Session(id=session_id, user_email=user_email)
+        return Session(id=session_id, user_email=user_email.decode())
 
 
 class StockRepository:

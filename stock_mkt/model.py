@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, UUID
+from pydantic import BaseModel, EmailStr
 
 
 class SignUpRequest(BaseModel):
@@ -29,7 +29,7 @@ class User(BaseModel):
 class Session(BaseModel):
     """The active session of the user."""
 
-    id: UUID
+    id: str
     user_email: str
 
 
@@ -39,6 +39,7 @@ class StockRequest(BaseModel):
     function: str
     symbol: str
     outputsize: str
+    apikey: str
 
 
 class StockResponse(BaseModel):
