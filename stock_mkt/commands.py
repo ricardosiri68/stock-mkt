@@ -7,10 +7,6 @@ from stock_mkt.repositories import SessionRepository, UserRepository
 
 
 def signup_user(signup: User):
-
-    if not signup.name or not signup.last_name or not signup.email:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="All fields are required")
-
     repo = UserRepository()
     user = repo.get_by_email(signup.email)
 
@@ -32,7 +28,7 @@ def login_user(email: str, password: str):
     session_repo = SessionRepository()
     user = user_repo.get_by_email(email)
 
-    if user.password != hash_password(password):
+    if not user or user.password != hash_password(password):
         raise Exception('Invalid login !!')
 
     session_id = str(uuid4())

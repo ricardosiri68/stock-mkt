@@ -15,7 +15,9 @@ class UserRepository:
     
     def get_by_email(self, email: str) -> Optional[User]:
         user = self.get_collection().find_one({'email': email})
-        return User(**user)
+
+        if user:
+            return User(**user)
 
     def save(self, user: User):
         self.get_collection().replace_one({'email': user.email}, user.model_dump(), upsert=True)

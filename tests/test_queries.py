@@ -31,13 +31,7 @@ class TestFetchStock(TestCase):
     @responses.activate
     def test_fetch_stock_success(self):
         self.__stub_response()
-        expected_stock = Stock(
-            open='467.1200',
-            high='470.7000',
-            low='462.2700',
-            close='464.6300',
-            variation=-4.2099999999999795
-        )
+        expected_stock = self.__expected_stock()
 
         stock = queries.fetch_stock('meta')
 
@@ -46,13 +40,7 @@ class TestFetchStock(TestCase):
     @responses.activate
     def test_fetched_stock_is_stored_on_cache(self):
         self.__stub_response()
-        expected_stock = Stock(
-            open='467.1200',
-            high='470.7000',
-            low='462.2700',
-            close='464.6300',
-            variation=-4.2099999999999795
-        )
+        expected_stock = self.__expected_stock()
 
         queries.fetch_stock('meta')
         stock = self.stock_repo.get('meta')
@@ -60,13 +48,7 @@ class TestFetchStock(TestCase):
         assert stock == expected_stock
 
     def test_fetch_stock_cached(self):
-        expected_stock = Stock(
-            open='467.1200',
-            high='470.7000',
-            low='462.2700',
-            close='464.6300',
-            variation=-4.2099999999999795
-        )
+        expected_stock = self.__expected_stock()
         self.stock_repo.save('meta', expected_stock)
 
         stock = queries.fetch_stock('meta')
@@ -83,6 +65,15 @@ class TestFetchStock(TestCase):
             'GET',
             ALPHA_VANTAGE_URL,
             json=self.__get_response_content()
+        )
+
+    def __expected_stock(self):
+        return Stock(
+            open='467.1200',
+            high='470.7000',
+            low='462.2700',
+            close='464.6300',
+            variation=-4.2099999999999795
         )
 
 
