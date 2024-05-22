@@ -1,4 +1,5 @@
 import json
+from http import HTTPStatus
 
 from fastapi import HTTPException, Request
 import requests
@@ -45,15 +46,11 @@ def fetch_stock(symbol: str):
     return stock
 
 
-def get_current_user(request: Request):
-    api_key = request.headers.get('API_KEY')
+def get_current_user(api_key: str):
     jwt_manager = JwtManager()
     session_repo = SessionRepository()
     session_data = jwt_manager.decode(api_key)
     session = session_repo.get(session_data.get('session_id'))
 
     if session is None:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-    if session and session_data.get('email') != session.user_email:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Unauthorized")

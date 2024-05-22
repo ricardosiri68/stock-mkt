@@ -28,7 +28,7 @@ async def login(request: LogInRequest):
 
 @app.get("/stock/{symbol}")
 async def get_stock(request: Request, symbol: str):
-    get_current_user(request)
+    get_current_user(request.headers.get('API_KEY'))
     try:
         return fetch_stock(symbol)
     except KeyError:

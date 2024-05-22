@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from uuid import uuid4, UUID
 
 from stock_mkt.crypto_utils import JwtManager, hash_password
@@ -8,7 +9,7 @@ from stock_mkt.repositories import SessionRepository, UserRepository
 def signup_user(signup: User):
 
     if not signup.name or not signup.last_name or not signup.email:
-        raise HTTPException(status_code=400, detail="All fields are required")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="All fields are required")
 
     repo = UserRepository()
     user = repo.get_by_email(signup.email)
