@@ -57,7 +57,7 @@ class TestFetchStock(TestCase):
 
 
     def __get_response_content(self):
-        with open('tests/alpha_response.json', 'r') as f:
+        with open('tests/responses/alpha_response.json', 'r') as f:
             return json.load(f)
     
     def __stub_response(self):
