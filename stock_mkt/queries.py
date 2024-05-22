@@ -52,5 +52,8 @@ def get_current_user(request: Request):
     session_data = jwt_manager.decode(api_key)
     session = session_repo.get(session_data.get('session_id'))
 
+    if session is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     if session and session_data.get('email') != session.user_email:
         raise HTTPException(status_code=401, detail="Unauthorized")
