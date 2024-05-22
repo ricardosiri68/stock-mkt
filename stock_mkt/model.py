@@ -1,20 +1,20 @@
 from pydantic import BaseModel, EmailStr
 
 
-class SignUpRequest(BaseModel):
-    """The request to add a new user to the system."""
-
-    name: str
-    last_name: str
-    email: EmailStr
-    password: str
-
-
 class LogInRequest(BaseModel):
     """The request to add a new user to the system."""
 
     email: str
     password: str
+
+
+class StockRequest(BaseModel):
+    """The request to the backend stock api."""
+
+    function: str
+    symbol: str
+    outputsize: str
+    apikey: str
 
 
 class User(BaseModel):
@@ -31,15 +31,6 @@ class Session(BaseModel):
 
     id: str
     user_email: str
-
-
-class StockRequest(BaseModel):
-    """The request to the backend stock api."""
-
-    function: str
-    symbol: str
-    outputsize: str
-    apikey: str
 
 
 class Stock(BaseModel):

@@ -6,7 +6,7 @@ import requests
 from fastapi import FastAPI, HTTPException, Request, Depends, Response
 
 from stock_mkt.commands import login_user, signup_user
-from stock_mkt.model import LogInRequest, SignUpRequest
+from stock_mkt.model import LogInRequest, User
 from stock_mkt.queries import fetch_stock, get_current_user
 
 
@@ -15,7 +15,7 @@ app = FastAPI()
 
 
 @app.post("/signup")
-async def signup(request: SignUpRequest):
+async def signup(request: User):
     signup_user(request)
     return Response(status_code=HTTPStatus.NO_CONTENT)
 
