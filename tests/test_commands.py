@@ -8,6 +8,7 @@ from stock_mkt.repositories import UserRepository
 from stock_mkt import commands
 from stock_mkt.config import MONGO_DB_NAME
 from stock_mkt.crypto_utils import hash_password, JwtManager
+from tests.utils import clear_users
 
 
 class TestSignup(TestCase):
@@ -16,8 +17,8 @@ class TestSignup(TestCase):
         self.user_repo = UserRepository()
 
     def tearDown(self):
-        db_client = get_db_client()
-        db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
+        super().tearDown()
+        clear_users()
 
     def test_signup_success(self):
         expected_user = self.__user_entity()
@@ -58,8 +59,8 @@ class TestLogin(TestCase):
         self.user_repo.save(self.user)
 
     def tearDown(self):
-        db_client = get_db_client()
-        db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
+        super().tearDown()
+        clear_users()
 
     def test_login_success(self):
         api_key = commands.login_user('some@email.com', 'some')

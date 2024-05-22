@@ -1,17 +1,18 @@
-import json
 from http import HTTPStatus
 
-from fastapi import HTTPException, Request
+from fastapi import HTTPException
+
 import requests
 
 from stock_mkt import config
-from stock_mkt.model import StockRequest, Stock, Session
-from stock_mkt.logs import logging
-from stock_mkt.repositories import UserRepository, SessionRepository, StockRepository
 from stock_mkt.crypto_utils import JwtManager
+from stock_mkt.logs import logging
+from stock_mkt.model import Stock, StockRequest
+from stock_mkt.repositories import SessionRepository, StockRepository
 
 
 def fetch_stock(symbol: str):
+    """Retrive the stock market data resoution from the remote API service."""
     stock_repo = StockRepository()
     stock = stock_repo.get(symbol)
 
@@ -47,6 +48,7 @@ def fetch_stock(symbol: str):
 
 
 def get_current_user(api_key: str):
+    """Check the users authorization credentials."""
     jwt_manager = JwtManager()
     session_repo = SessionRepository()
     session_data = jwt_manager.decode(api_key)

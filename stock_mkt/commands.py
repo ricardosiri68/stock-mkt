@@ -1,5 +1,4 @@
-from http import HTTPStatus
-from uuid import uuid4, UUID
+from uuid import uuid4
 
 from stock_mkt.crypto_utils import JwtManager, hash_password
 from stock_mkt.model import Session, User
@@ -7,6 +6,7 @@ from stock_mkt.repositories import SessionRepository, UserRepository
 
 
 def signup_user(signup: User):
+    """Sign Up a new user and store his data profile."""
     repo = UserRepository()
     user = repo.get_by_email(signup.email)
 
@@ -23,6 +23,7 @@ def signup_user(signup: User):
 
 
 def login_user(email: str, password: str):
+    """Sign log in a registered user and store the session on cache."""
     jwt_manager = JwtManager()
     user_repo = UserRepository()
     session_repo = SessionRepository()

@@ -1,4 +1,3 @@
-import json
 from unittest import TestCase
 from http import HTTPStatus
 
@@ -13,6 +12,7 @@ from stock_mkt.crypto_utils import hash_password
 from stock_mkt.model import User
 from stock_mkt.cache import get_cache
 from stock_mkt.commands import login_user
+from tests.utils import response_content, stub_response, clear_cache, clear_users
 
 client = TestClient(app)
 
@@ -59,10 +59,8 @@ class TestLoginEndpoint(TestCase):
 
     def tearDown(self):
         super().tearDown()
-        db_client = get_db_client()
-        db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
-        cache = get_cache()
-        cache.flushall()
+        clear_cache()
+        clear_users()
         
     def test_login_success(self):
         response = client.post('/login', json={'email': 'some@email.com', 'password': 'somepass'})
@@ -99,12 +97,12 @@ class TestGetStockEndpoint(TestCase):
     def tearDown(self):
         """Clear the cache."""
         super().tearDown()
-        self.cache.flushall()
-        self.__db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
+        clear_cache()
+        clear_users()
 
     @responses.activate
     def test_get_stock_success(self):
-        self.__stub_response()
+        stub_response()
         expected_response = {
             'status': HTTPStatus.OK,
             'content': {
@@ -137,23 +135,8 @@ class TestGetStockEndpoint(TestCase):
         responses.add(
             'GET',
             ALPHA_VANTAGE_URL,
-            json=self.__get_wrong_symbol_content()
+            json=response_content('wrong_symbol_response')
         )
         response = client.get('/stock/zeta', headers={'API_KEY': self.api_key})
 
         assert response.status_code == HTTPStatus.BAD_REQUEST
-
-    def __get_response_content(self):
-        with open('tests/responses/alpha_response.json', 'r') as f:
-            return json.load(f)
-
-    def __get_wrong_symbol_content(self):
-        with open('tests/responses/wrong_symbol_response.json', 'r') as f:
-            return json.load(f)
-    
-    def __stub_response(self):
-        responses.add(
-            'GET',
-            ALPHA_VANTAGE_URL,
-            json=self.__get_response_content()
-        )

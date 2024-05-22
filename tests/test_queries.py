@@ -8,12 +8,13 @@ from fastapi import Request, HTTPException
 
 from stock_mkt import queries
 from stock_mkt.cache import get_cache
-from stock_mkt.config import ALPHA_VANTAGE_URL, MONGO_DB_NAME
+from stock_mkt.config import MONGO_DB_NAME
 from stock_mkt.commands import login_user
 from stock_mkt.crypto_utils import hash_password
 from stock_mkt.db import get_db_client
 from stock_mkt.model import Stock, User
 from stock_mkt.repositories import StockRepository, UserRepository
+from tests.utils import stub_response, clear_cache, clear_users
 
 
 class TestFetchStock(TestCase):
@@ -25,12 +26,11 @@ class TestFetchStock(TestCase):
     def tearDown(self):
         """Clear the cache."""
         super().tearDown()
-        cache = get_cache()
-        cache.flushall()
+        clear_cache()
 
     @responses.activate
     def test_fetch_stock_success(self):
-        self.__stub_response()
+        stub_response()
         expected_stock = self.__expected_stock()
 
         stock = queries.fetch_stock('meta')
@@ -39,7 +39,7 @@ class TestFetchStock(TestCase):
 
     @responses.activate
     def test_fetched_stock_is_stored_on_cache(self):
-        self.__stub_response()
+        stub_response()
         expected_stock = self.__expected_stock()
 
         queries.fetch_stock('meta')
@@ -54,18 +54,6 @@ class TestFetchStock(TestCase):
         stock = queries.fetch_stock('meta')
 
         assert stock == expected_stock
-
-
-    def __get_response_content(self):
-        with open('tests/responses/alpha_response.json', 'r') as f:
-            return json.load(f)
-    
-    def __stub_response(self):
-        responses.add(
-            'GET',
-            ALPHA_VANTAGE_URL,
-            json=self.__get_response_content()
-        )
 
     def __expected_stock(self):
         return Stock(
@@ -82,7 +70,6 @@ class TestCurrentUser(TestCase):
     def setUp(self):
         super().setUp()
         self.cache = get_cache()
-        self.__db_client = get_db_client()
         self.user_repo = UserRepository()
         self.user = User(
             email='some@email.com',
@@ -96,8 +83,8 @@ class TestCurrentUser(TestCase):
     def tearDown(self):
         """Clear the cache."""
         super().tearDown()
-        self.cache.flushall()
-        self.__db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
+        clear_cache()
+        clear_users()
 
     def test_get_current_user_success(self):
         result = queries.get_current_user(self.api_key)
