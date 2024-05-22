@@ -7,12 +7,12 @@ import responses
 from stock_mkt.app import app
 from stock_mkt.cache import get_cache
 from stock_mkt.commands import login_user
-from stock_mkt.config import MONGO_DB_NAME, ALPHA_VANTAGE_URL
+from stock_mkt.config import ALPHA_VANTAGE_URL
 from stock_mkt.crypto_utils import hash_password
 from stock_mkt.db import get_db_client
 from stock_mkt.model import User
 from stock_mkt.repositories import UserRepository
-from tests.utils import response_content, stub_response, clear_cache, clear_users
+from tests.utils import clear_cache, clear_users, response_content, stub_response
 
 
 client = TestClient(app)
@@ -22,8 +22,7 @@ class TestSignUpEndpoint(TestCase):
 
     def tearDown(self):
         super().tearDown()
-        db_client = get_db_client()
-        db_client.get_database(MONGO_DB_NAME).drop_collection(UserRepository.COLLECTION_NAME)
+        clear_users()
 
     def test_signup_success(self):
         user_json = {

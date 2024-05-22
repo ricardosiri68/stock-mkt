@@ -1,9 +1,12 @@
+from http import HTTPStatus
 from unittest import TestCase
+
+from fastapi import HTTPException
 
 import pytest
 
 from stock_mkt import commands
-from stock_mkt.crypto_utils import hash_password, JwtManager
+from stock_mkt.crypto_utils import JwtManager, hash_password
 from stock_mkt.model import User
 from stock_mkt.repositories import UserRepository
 from tests.utils import clear_users
@@ -32,6 +35,7 @@ class TestSignup(TestCase):
         with pytest.raises(Exception) as error:
             commands.signup_user(previous_user)
             assert str(error) == 'User already exists !!'
+            assert error.status_code == HTTPStatus.CONFLICT
 
     def __user_entity(self):
         return User(
@@ -40,7 +44,6 @@ class TestSignup(TestCase):
             last_name='Somelastname',
             password='some'
         )
-
 
 
 class TestLogin(TestCase):
@@ -68,11 +71,13 @@ class TestLogin(TestCase):
         assert payload.get('email') == 'some@email.com'
 
     def test_login_fail_user_dont_exists(self):
-        with pytest.raises(Exception) as error:
+        with pytest.raises(HTTPException) as error:
             commands.login_user('no_one@email.com', 'noone')
             assert str(error) == 'Invalid login !!'
+            assert error.status_code == HTTPStatus.UNAUTHORIZED
 
     def test_login_fail_wrong_password(self):
-        with pytest.raises(Exception) as error:
+        with pytest.raises(HTTPException) as error:
             commands.login_user('some@email.com', 'somee')
             assert str(error) == 'Invalid login !!'
+            assert error.status_code == HTTPStatus.UNAUTHORIZED

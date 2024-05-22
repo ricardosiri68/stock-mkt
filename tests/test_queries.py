@@ -11,7 +11,7 @@ from stock_mkt.commands import login_user
 from stock_mkt.crypto_utils import hash_password
 from stock_mkt.model import Stock, User
 from stock_mkt.repositories import StockRepository, UserRepository
-from tests.utils import stub_response, clear_cache, clear_users
+from tests.utils import clear_cache, clear_users, stub_response
 
 
 class TestFetchStock(TestCase):

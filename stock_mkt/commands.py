@@ -1,4 +1,7 @@
+from http import HTTPStatus
 from uuid import uuid4
+
+from fastapi import HTTPException
 
 from stock_mkt.crypto_utils import JwtManager, hash_password
 from stock_mkt.model import Session, User
@@ -11,7 +14,10 @@ def signup_user(signup: User):
     user = repo.get_by_email(signup.email)
 
     if user:
-        raise Exception('User already exists !!')
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='User already exists !!'
+        )
 
     user = User(
         email=signup.email,
@@ -30,7 +36,10 @@ def login_user(email: str, password: str):
     user = user_repo.get_by_email(email)
 
     if not user or user.password != hash_password(password):
-        raise Exception('Invalid login !!')
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail='Invalid login !!'
+        )
 
     session_id = str(uuid4())
     session_repo.save(Session(id=session_id, user_email=user.email))
