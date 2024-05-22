@@ -1,6 +1,6 @@
 from typing import Optional
 
-from stock_mkt.config import MONGO_DB_NAME
+from stock_mkt.config import MONGO_DB_NAME, SESSION_TTL
 from stock_mkt.db import get_db_client
 from stock_mkt.model import User, Session
 from stock_mkt.cache import get_cache
@@ -26,17 +26,20 @@ class UserRepository:
 
 class SessionRepository:
 
-    DB = 0
+    NAMESPACE = 'sessions'
 
     def __init__(self):
-        self.__cache_client = get_cache(self.DB)
+        self.__cache_client = get_cache()
 
     def save(self, session: Session):
-        self.__cache_client.set(session.id, session.user_email, ex=108000)
+        self.__cache_client.set(self.key(session.id), session.user_email, ex=SESSION_TTL)
 
     def get(self, session_id: str) -> Session:
-        user_email = self.__cache_client.get(session_id)
+        user_email = self.__cache_client.get(self.key(session_id))
         return Session(id=session_id, user_email=user_email.decode())
+    
+    def key(self, session_id: str) -> str:
+        return f'{self.NAMESPACE}:{session_id}'
 
 
 class StockRepository:

@@ -17,10 +17,6 @@ services:
         source: ./tests
         target: /app/tests/
 
-      - type: volume
-        source: stock-mkt-data
-        target: /data
-
     ports:
       - "8080:8000"  # Main port
       - "5555:5555"  # Debug port
@@ -40,15 +36,12 @@ services:
     image: redis
     ports:
       - "6379:6379"
-    volumes:
-      - redis-data:/bitnami/redis/data
     networks:
       - stock-mkt-ntw
 
 volumes:
   stock-mkt-data:
   mongo-data:
-  redis-data:
 
 networks:
   # The presence of these objects is sufficient to define them
