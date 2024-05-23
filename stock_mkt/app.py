@@ -22,7 +22,7 @@ async def signup(request: User):
 async def login(request: LogInRequest):
     """Login registered user."""
     api_key = login_user(request.email, request.password)
-    return Response(status_code=HTTPStatus.NO_CONTENT, content=json.dumps({'api_key': api_key}))
+    return Response(status_code=HTTPStatus.OK, content=json.dumps({'api_key': api_key}))
 
 
 @app.get("/stock/{symbol}")

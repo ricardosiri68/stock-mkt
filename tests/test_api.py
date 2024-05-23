@@ -65,7 +65,7 @@ class TestLoginEndpoint(TestCase):
     def test_login_success(self):
         response = client.post('/login', json={'email': 'some@email.com', 'password': 'somepass'})
 
-        assert response.status_code == HTTPStatus.NO_CONTENT
+        assert response.status_code == HTTPStatus.OK
         
     def test_login_content(self):
         response = client.post('/login', json={'email': 'some@email.com', 'password': 'somepass'})

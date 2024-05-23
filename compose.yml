@@ -20,6 +20,9 @@ services:
     ports:
       - "8080:8000"  # Main port
       - "5555:5555"  # Debug port
+    depends_on:
+      - mongo.db
+      - cache.db
     networks:
       - stock-mkt-ntw
 
